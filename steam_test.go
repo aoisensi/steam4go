@@ -8,7 +8,9 @@ import (
 )
 
 const (
-    UserId = "76561198049739081"
+
+    UserId = 76561198049739081
+    AppId = 440
     ApiKeyPath = "apikey.txt"
 )
 
@@ -20,6 +22,16 @@ func TestGetPlayerSummaries(t *testing.T) {
         return
     }
     pp.Println(player)
+}
+
+func TestGetUserStatsForGame(t *testing.T) {
+    api := NewSteamApi(LoadApiKey())
+    state, err := api.GetUserStatsForGame(UserId, AppId)
+    if err != nil {
+        t.Error(err)
+        return
+    }
+    pp.Println(state)
 }
 
 func LoadApiKey() string {

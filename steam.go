@@ -1,11 +1,12 @@
 package steam4go
 
 import (
+    "io/ioutil"
     "encoding/json"
     "net/http"
     "net/url"
     "strings"
-    "io/ioutil"
+    "strconv"
 )
 
 const (
@@ -13,35 +14,11 @@ const (
     ApiVersion = "v0002"
 )
 
+type SteamId uint64
+type GameId uint32
+
 type SteamApi struct {
     key string
-}
-
-type Player struct {
-    //public data
-    SteamID string
-    PersonaName string
-    ProfileUrl string
-    Avater string
-    AvaterMedium string
-    AvaterFull string
-    PersonaState int
-    CommunityVisibilityState int
-    ProfileState int
-    LastLogoff int
-    CommentPermission int
-
-    //private data
-    RealName string
-    PrimaryClanId string
-    TimeCreated int
-    GameId int
-    GameServerIp string
-    GameExtraInfo string
-    //CityId int
-    LocCountryCode string
-    LocStateCode string
-    LocCityId int
 }
 
 func NewSteamApi(key string) *SteamApi {
@@ -54,31 +31,19 @@ func (p *SteamApi) genUrl(ifname, mtname string, params url.Values) string {
     return url + "?" + params.Encode()
 }
 
-func (p *SteamApi) GetPlayerSummary(steamid string) (player Player, err error) {
-    players, err := p.GetPlayerSummaries([]string{steamid})
-    if err != nil {
-        return Player{}, err
-    }
-    return players[0], nil
+func (p SteamId) String() string {
+    return strconv.FormatUint(uint64(p), 10)
 }
 
-func (p *SteamApi) GetPlayerSummaries(steamids []string) ([]Player, error) {
-    params := url.Values{}
-    params.Add("steamids", strings.Join(steamids, ","))
-    url := p.genUrl("ISteamUser", "GetPlayerSummaries", params)
+func (p GameId) String() string {
+    return strconv.FormatUint(uint64(p), 10)
+}
+
+func getJsonFromUrl(url string) ([]byte, error) {
     resp, err := http.Get(url)
     if err != nil {
         return nil, err
     }
     defer resp.Body.Close()
-    body, err := ioutil.ReadAll(resp.Body)
-    if err != nil {
-        return nil, err
-    }
-    var r struct { Response struct {Players []Player} }
-    err = json.Unmarshal(body, &r)
-    if err != nil {
-        return nil, err
-    }
-    return r.Response.Players, nil
+    return ioutil.ReadAll(resp.Body)
 }
