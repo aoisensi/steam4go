@@ -125,7 +125,7 @@ func (p QueryFilesArgs) SetAppID(appid AppID) {
 
 //SetRequiredTags is add requiredtags arg
 func (p QueryFilesArgs) SetRequiredTags(tags []string) {
-	key := "requiredtags"
+	key := "requiredtags[]"
 	for i, value := range tags {
 		if i == 0 {
 			p.set(key, value)
@@ -137,7 +137,7 @@ func (p QueryFilesArgs) SetRequiredTags(tags []string) {
 
 //SetRequiredTag is add only solo tag
 func (p QueryFilesArgs) SetRequiredTag(tag string) {
-	p.set("requiredtags", tag)
+	p.set("requiredtags[]", tag)
 }
 
 //SetNumPerPage is add numperpage arg
