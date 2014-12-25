@@ -63,7 +63,8 @@ func TestGetPlayerAchievements(t *testing.T) {
 
 func TestQueryFiles(t *testing.T) {
 	api := NewSteamAPI(LoadAPIKey())
-	_, err := api.QueryFiles(nil)
+	args := NewQueryFilesArgs()
+	_, err := api.QueryFiles(args)
 	if err != nil {
 		t.Error(err)
 		return
