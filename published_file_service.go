@@ -3,7 +3,6 @@ package steam4go
 import (
 	"encoding/json"
 	"net/url"
-	"strings"
 )
 
 //PublishedFileService date
@@ -89,6 +88,10 @@ func (p QueryFilesArgs) add(key, value string) {
 	url.Values(p).Add(key, value)
 }
 
+func (p QueryFilesArgs) set(key, value string) {
+	url.Values(p).Set(key, value)
+}
+
 /*
 	query_type, page                           int
 	creator_appid, appid                       AppID
@@ -107,27 +110,39 @@ func (p QueryFilesArgs) add(key, value string) {
 
 //SetQueryType is add query_type arg
 func (p QueryFilesArgs) SetQueryType(queryType int) {
-	p.add("query_type", string(queryType))
+	p.set("query_type", string(queryType))
 }
 
 //SetPage is add page arg
 func (p QueryFilesArgs) SetPage(page int) {
-	p.add("page", string(page))
+	p.set("page", string(page))
 }
 
 //SetAppID is add appid arg
 func (p QueryFilesArgs) SetAppID(appid AppID) {
-	p.add("appid", string(appid))
+	p.set("appid", string(appid))
 }
 
 //SetRequiredTags is add requiredtags arg
 func (p QueryFilesArgs) SetRequiredTags(tags []string) {
-	p.add("requiredtags", strings.Join(tags, ","))
+	key := "requiredtags"
+	for i, value := range tags {
+		if i == 0 {
+			p.set(key, value)
+		} else {
+			p.add(key, value)
+		}
+	}
+}
+
+//SetRequiredTag is add only solo tag
+func (p QueryFilesArgs) SetRequiredTag(tag string) {
+	p.set("requiredtags", tag)
 }
 
 //SetNumPerPage is add numperpage arg
 func (p QueryFilesArgs) SetNumPerPage(num int) {
-	p.add("numperpage", string(num))
+	p.set("numperpage", string(num))
 }
 
 //TODO more
