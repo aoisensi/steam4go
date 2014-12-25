@@ -1,49 +1,54 @@
 package steam4go
 
 import (
-    "io/ioutil"
-    "encoding/json"
-    "net/http"
-    "net/url"
-    "strings"
-    "strconv"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+	"strconv"
+	"strings"
 )
 
 const (
-    BaseUrl = "http://api.steampowered.com"
-    ApiVersion = "v0002"
+	baseURL = "http://api.steampowered.com"
+	ver1    = "v1"
+	ver2    = "v2"
 )
 
-type SteamId uint64
-type GameId uint32
+//SteamID date
+type SteamID uint64
 
-type SteamApi struct {
-    key string
+//AppID date
+type AppID uint32
+
+//SteamAPI main class
+type SteamAPI struct {
+	key string
 }
 
-func NewSteamApi(key string) *SteamApi {
-    return &SteamApi{key: key}
+//NewSteamAPI is gen steam api instance
+func NewSteamAPI(key string) *SteamAPI {
+	return &SteamAPI{key: key}
 }
 
-func (p *SteamApi) genUrl(ifname, mtname string, params url.Values) string {
-    url := strings.Join([]string{BaseUrl, ifname, mtname, ApiVersion}, "/")
-    params.Add("key", p.key)
-    return url + "?" + params.Encode()
+func (p *SteamAPI) genURL(ifname, mtname, ver string, params url.Values) string {
+	url := strings.Join([]string{baseURL, ifname, mtname, ver}, "/")
+	params.Add("key", p.key)
+	return url + "?" + params.Encode()
 }
 
-func (p SteamId) String() string {
-    return strconv.FormatUint(uint64(p), 10)
+func (p SteamID) String() string {
+	return strconv.FormatUint(uint64(p), 10)
 }
 
-func (p GameId) String() string {
-    return strconv.FormatUint(uint64(p), 10)
+func (p AppID) String() string {
+	return strconv.FormatUint(uint64(p), 10)
 }
 
-func getJsonFromUrl(url string) ([]byte, error) {
-    resp, err := http.Get(url)
-    if err != nil {
-        return nil, err
-    }
-    defer resp.Body.Close()
-    return ioutil.ReadAll(resp.Body)
+func getJSONFromURL(url string) ([]byte, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	return ioutil.ReadAll(resp.Body)
 }

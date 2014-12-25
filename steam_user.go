@@ -1,62 +1,93 @@
 package steam4go
 
 import (
-    "net/url"
-    "strings"
-    "encoding/json"
+	"encoding/json"
+	"net/url"
+	"strings"
 )
 
+//Player date
 type Player struct {
-    //public data
-    SteamId SteamId `json:",string"`
-    PersonaName string
-    ProfileUrl string
-    Avater string
-    AvaterMedium string
-    AvaterFull string
-    PersonaState int
-    CommunityVisibilityState int
-    ProfileState int
-    LastLogoff int
-    CommentPermission int
+	//public data
+	SteamID                  SteamID `json:",string"`
+	PersonaName              string
+	ProfileURL               string
+	Avater                   string
+	AvaterMedium             string
+	AvaterFull               string
+	PersonaState             int
+	CommunityVisibilityState int
+	ProfileState             int
+	LastLogoff               int
+	CommentPermission        int
 
-    //private data
-    RealName string
-    PrimaryClanId string
-    TimeCreated int
-    GameId GameId `json:",string"`
-    GameServerIp string
-    GameExtraInfo string
-    CityId int // DEPRECATED
-    LocCountryCode string
-    LocStateCode string
-    LocCityId int
+	//private data
+	RealName       string
+	PrimaryClanID  string
+	TimeCreated    int
+	GameID         AppID `json:",string"`
+	GameServerIP   string
+	GameExtraInfo  string
+	CityID         int // DEPRECATED
+	LocCountryCode string
+	LocStateCode   string
+	LocCityID      int
 }
 
-func (p *SteamApi) GetPlayerSummary(steamid SteamId) (*Player, error) {
-    players, err := p.GetPlayerSummaries([]SteamId{steamid})
-    if err != nil {
-        return nil, err
-    }
-    return &players[0], nil
+//Relationship date
+type Relationship string
+
+//Friend date
+type Friend struct {
+	SteamID      SteamID `json:",string"`
+	Relationship string
+	FriendSince  uint64 `json:"friend_since"`
 }
 
-func (p *SteamApi) GetPlayerSummaries(steamids []SteamId) ([]Player, error) {
-    params := url.Values{}
-    ids := make([]string, len(steamids))
-    for i, id := range steamids {
-        ids[i] = id.String()
-    }
-    params.Add("steamids", strings.Join([]string(ids), ","))
-    url := p.genUrl("ISteamUser", "GetPlayerSummaries", params)
-    body, err := getJsonFromUrl(url)
-    if err != nil {
-        return nil, err
-    }
-    var r struct {Response struct {Players []Player}}
-    err = json.Unmarshal(body, &r)
-    if err != nil {
-        return nil, err
-    }
-    return r.Response.Players, nil
+//GetPlayerSummary is binded GetPlayerSummaries
+func (p *SteamAPI) GetPlayerSummary(steamid SteamID) (*Player, error) {
+	players, err := p.GetPlayerSummaries([]SteamID{steamid})
+	if err != nil {
+		return nil, err
+	}
+	return &players[0], nil
+}
+
+//GetPlayerSummaries is ISteamUser/GetPlayerSummaries/v2
+func (p *SteamAPI) GetPlayerSummaries(steamids []SteamID) ([]Player, error) {
+	params := url.Values{}
+	ids := make([]string, len(steamids))
+	for i, id := range steamids {
+		ids[i] = id.String()
+	}
+	params.Add("steamids", strings.Join([]string(ids), ","))
+	url := p.genURL("ISteamUser", "GetPlayerSummaries", ver2, params)
+	body, err := getJSONFromURL(url)
+	if err != nil {
+		return nil, err
+	}
+	var r struct{ Response struct{ Players []Player } }
+	err = json.Unmarshal(body, &r)
+	if err != nil {
+		return nil, err
+	}
+	return r.Response.Players, nil
+}
+
+//GetFriendList is  ISteamUser/GetFriendList/v1
+func (p *SteamAPI) GetFriendList(steamid SteamID) ([]Friend, error) {
+	params := url.Values{}
+	params.Add("steamid", steamid.String())
+	params.Add("relationship", "all")
+	url := p.genURL("ISteamUser", "GetFriendList", ver1, params)
+	body, err := getJSONFromURL(url)
+	if err != nil {
+		return nil, err
+	}
+	var r struct{ FriendsList struct{ Friends []Friend } }
+	err = json.Unmarshal(body, &r)
+	if err != nil {
+		return nil, err
+	}
+	return r.FriendsList.Friends, nil
 }
