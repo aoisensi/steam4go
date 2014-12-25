@@ -125,6 +125,11 @@ func (p QueryFilesArgs) SetRequiredTags(tags []string) {
 	p.add("requiredtags", strings.Join(tags, ","))
 }
 
+//SetNumPerPage is add numperpage arg
+func (p QueryFilesArgs) SetNumPerPage(num int) {
+	p.add("numperpage", string(num))
+}
+
 //TODO more
 
 //QueryFiles is IPublishedFileService/QueryFiles/v1

@@ -9,6 +9,7 @@ import (
 const (
 	SteamIDTest SteamID = 76561198049739081
 	AppIDTF2    AppID   = 440
+	AppIDDota2  AppID   = 570
 	AppIDKF     AppID   = 1250
 	AppIDPD2    AppID   = 218620
 	AppIDTest   AppID   = AppIDPD2
