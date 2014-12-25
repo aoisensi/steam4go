@@ -155,7 +155,7 @@ func (p QueryFilesArgs) SetMatchAllTags(value bool) {
 
 //SetNumPerPage is add numperpage arg
 func (p QueryFilesArgs) SetNumPerPage(num int) {
-	p.set("numperpage", string(num))
+	p.set("numperpage", strconv.Itoa(num))
 }
 
 //TODO more
