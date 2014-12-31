@@ -135,7 +135,7 @@ func (p QueryFilesArgs) SetAppID(appid AppID) {
 //SetRequiredTags is add requiredtags arg
 //u need to SetQueryType to 1
 func (p QueryFilesArgs) SetRequiredTags(tags []string) {
-	key := "requiredtags[]"
+	key := "requiredtags"
 	p.set(key, tags[0])
 	for _, value := range tags[1:] {
 		p.add(key, value)
@@ -145,7 +145,7 @@ func (p QueryFilesArgs) SetRequiredTags(tags []string) {
 //SetRequiredTag is add only solo tag
 //u need to SetQueryType to 1
 func (p QueryFilesArgs) SetRequiredTag(tag string) {
-	p.set("requiredtags[]", tag)
+	p.set("requiredtags", tag)
 }
 
 //SetMatchAllTags is add match_all_tags arg

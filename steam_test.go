@@ -71,6 +71,15 @@ func TestQueryFiles(t *testing.T) {
 	}
 }
 
+func TestGetServerInfo(t *testing.T) {
+	api := NewSteamAPI(LoadAPIKey())
+	_, err := api.GetServerInfo()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
 func LoadAPIKey() string {
 	file, err := os.Open(APIKeyPath)
 	if err != nil {
