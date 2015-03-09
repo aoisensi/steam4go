@@ -6,6 +6,19 @@ import (
 	"strings"
 )
 
+//PersonaState const
+type PersonaState int
+
+const (
+	PersonaStateOffline        PersonaState = 1
+	PersonaStateOnline                      = 2
+	PersonaStateBusy                        = 3
+	PersonaStateAway                        = 4
+	PersonaStateSnooze                      = 5
+	PersonaStateLookingToTrade              = 6
+	PersonaStateLookingToPlay               = 7
+)
+
 //Player date
 type Player struct {
 	//public data
@@ -15,7 +28,7 @@ type Player struct {
 	Avater                   string
 	AvaterMedium             string
 	AvaterFull               string
-	PersonaState             int
+	PersonaState             PersonaState
 	CommunityVisibilityState int
 	ProfileState             int
 	LastLogoff               int
