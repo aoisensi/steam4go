@@ -31,7 +31,7 @@ type Player struct {
 	PersonaState             PersonaState
 	CommunityVisibilityState int
 	ProfileState             int
-	LastLogoff               int
+	LastLogoff               int64
 	CommentPermission        int
 
 	//private data
