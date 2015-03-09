@@ -10,13 +10,13 @@ import (
 type PersonaState int
 
 const (
-	PersonaStateOffline        PersonaState = 1
-	PersonaStateOnline                      = 2
-	PersonaStateBusy                        = 3
-	PersonaStateAway                        = 4
-	PersonaStateSnooze                      = 5
-	PersonaStateLookingToTrade              = 6
-	PersonaStateLookingToPlay               = 7
+	PersonaStateOffline PersonaState = iota
+	PersonaStateOnline
+	PersonaStateBusy
+	PersonaStateAway
+	PersonaStateSnooze
+	PersonaStateLookingToTrade
+	PersonaStateLookingToPlay
 )
 
 //Player date
